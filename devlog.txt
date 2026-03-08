@@ -1,0 +1,69 @@
+Update v2.5 03/05/2026
+    - Updated videoPage to have more functionality similar to old versions
+
+Bug Fix v2.4 02/26/2026
+    - Fixed issue with upNext
+
+Bug Fix v2.3 02/25/2026
+    - Fixed timestamp issues
+
+Update v2.2 02/20/2026
+    - Updated conWatchData logic to remove shows that have been completely finished from continue watching
+    - Updated the mostRecent episode on the showInfo page to reset to "Start Watching" after show has been completely finished
+    - Updated the conWatchData and mostRecent to display the next available episode if current episode has been finished
+    - Episodes that are finished will have their timeLeft changed into "Watch Again"
+    - finish episode interval is customizable (top of main.js, finishEpisodeInterval)
+
+Update/Bug Fix v2.1 02/19/2026
+    - Multiple bug fixes
+    - Changed styles
+    - Updated default selected season on show info to the most recent season watched
+
+Update v2.0 02/18/2026
+    - Overhauled styles
+    - Added continue watching feature
+    - Added recently updated feature
+    - Seasons of shows added can be merged together for better organization
+    - History page upgraded with more functionality
+    - Removed LWV feature as it has been replaced
+    - Shows can now include a synopsis
+    - Made watching videos more efficient by now only including up next rather than whole episode list
+
+Update v1.9 01/08/2026
+    - Updated showInfo to be able to work with shows with no episodes currently
+
+Bug Fix v1.8 12/18/2025
+    - Fixed charset encoding
+    - Changed font
+
+Update v1.7 12/10/2025
+    - Updated mediaSession API
+
+Bug Fix v1.6 12/01/2025
+    - Fixed autoplay
+
+Update/Bug Fix v1.5 11/18/2025
+    - Updated how images are done to fix potential issues
+
+Update v1.4 11/13/2025
+    - Added show title support (filename isnt limited anymore)
+    - Added next, previous, and restart show options when watching
+
+Update v1.3 11/12/2025
+    - Can download/upload historyData and lwv as a JSON file (on history.html)
+    - Can view LWV data (on history.html)
+    - Stylized and made link to history.html
+
+
+Update v1.2 11/10/2025
+    - Added history.html
+    - Can view historyData (on history.html)
+    - Can clear historyData (on history.html)
+
+Update/Bug Fix v1.1 11/07/2025
+    - Added LWV(Last Watched Video)
+    - fixed historyData timestamp issues
+
+Release v1.0 11/06/2025
+    - showsList support added
+    - Save watch data via IndexedDB

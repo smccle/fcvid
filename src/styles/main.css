@@ -1,0 +1,369 @@
+.nav-pills .nav-link {
+  background-color: none; /* Light gray background */
+  border: none;
+  color: #eee;
+  padding: 10px 20px; /* Space between text and border */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 8px 4px;
+  cursor: pointer;
+  /* Key style for pill shape */
+  border-radius: 50px; 
+  font-size: 14px;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: #555; /* Darker background on hover */
+  color: #eee;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #eee; /* Blue background for selected */
+  color: #111;
+}
+
+.nav-pills {
+  text-align: center;
+  justify-content: center;
+}
+
+#newestContainer > .card {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.card {display:inline-block; margin: 1vw; user-select: none;}
+.card:hover {
+  transform: scale(1.05);
+}
+
+.notransform > .card-body > .btn:hover {
+  transform: scale(1.05);
+}
+
+.notransform:hover {
+  transform: none;
+}
+
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fit-stuff {
+  width: max-content;
+}
+
+.card-img-top {
+  object-fit:cover;
+  width: 100%;
+  height: 20vw;
+  max-height: 297px;
+  user-select: none;
+  pointer-events: none;
+}
+
+.card-title {
+  font-size: 0.9rem;
+}
+
+.card-text {
+  font-size: 0.8rem;
+}
+
+.card {
+  background-color: transparent;
+  color: #eee;
+  border-color: #eee;
+}
+
+.card > .card-body > .btn {
+  background-color: #eee; /* Light gray background */
+  border: none;
+  color: #111;
+  padding: 0.5rem 1rem; /* Space between text and border */
+  text-align: center;
+  text-decoration: none;
+   position:absolute; 
+   margin-left:-45%;
+   left:50%;
+   width:90%;
+   bottom:2%;
+  cursor: pointer;
+  /* Key style for pill shape */
+  border-radius: 50px; 
+  font-size: 0.6rem;
+}
+
+body {
+    background-color: #191919;
+    color: #eee;
+    overflow-x: hidden;
+}
+
+.toprow {
+  background-color: #141414;
+}
+
+.bottomrow, #episodeLIstCon {
+  background-color: #191919;
+}
+
+#newest {
+  display: inline;
+}
+
+#showInfoPage, #videoPage {
+    display: none;
+    overflow-x:hidden;
+}
+
+
+.tfp {
+    width: 25%;
+}
+
+.sfp {
+    width: 75%;
+}
+
+.btn-close {
+  float: right;
+
+}
+
+#container {
+  background-color: #141414;
+}
+
+.row {
+  padding: 1rem;
+}
+
+#player {
+  width: 100%;
+  height: 75%;
+}
+
+#info {
+  width: 100vw;
+  height: auto;
+}
+
+#info {
+  padding: 1vw;
+}
+
+.card-long-no-img {
+  margin-left: 0;
+}
+
+#leftVid {
+  overflow-y: auto;
+  width: 69vw;
+  height: 100vh;
+  float: left;
+}
+
+#leftVid > p, #leftVid > h3 {
+  margin-left: 1vw;
+}
+
+#showTitleVidPage {
+  color: yellow;
+  text-decoration: underline;
+  cursor: pointer;
+  width: max-content;
+  user-select: none;
+}
+
+
+#closeVideoBtn, #closeShowInfoBtn {
+  transition: 0.1s ;
+  position: absolute;
+  margin-top: 1rem;
+  z-index: 999;
+  cursor: pointer;
+  border-radius: 3rem; 
+  font-size: 0.9rem;
+  background-color: #212529;
+  opacity: 0;
+  background-color: none; /* Light gray background */
+  border: 1px solid #777;
+  color: #eee;
+  padding: 0.5rem 1rem; /* Space between text and border */
+  text-align: center;
+  text-decoration: none;
+  opacity: 1;
+  transition: 0.25s ease-in-out;
+}
+
+#closeShowInfoBtn {
+  right: 1rem;
+}
+
+#closeVideoBtn {
+  left: 1rem;
+}
+
+#closeVideoBtn:hover, #closeShowInfoBtn:hover {
+  background-color: #333; /* Darker background on hover */
+  color: #eee;
+}
+
+#rightVid {
+  width: 29vw;
+  overflow-y: auto;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  height: 100vh;
+  padding-right: 2vw;
+  float: right;
+}
+
+#continueShowInfoBtn {
+  background-color: #eee; /* Light gray background */
+  color: #111;
+  padding: 0.5rem 1rem; /* Space between text and border */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 8px 4px;
+  cursor: pointer;
+  /* Key style for pill shape */
+  border-radius: 50px; 
+  font-size: 0.9rem;
+  bottom: 1.5rem;
+}
+
+#continueShowInfoBtn:hover {
+  transform: scale(1.05);
+}
+
+#seasonSelector, #vidSeasonSelector {
+  font-size: 1rem;
+  margin-left: 3vw;
+  width: auto;
+  height: auto;
+  background-color: #212529;
+}
+
+#vidSeasonSelector {
+  font-size: 0.9rem;
+}
+
+.epBtn {
+  margin-left: 3vw;
+  margin-top: 1vw;
+  height: auto;
+  width: 90vw;
+  background-color: none; /* Light gray background */
+  border: 1px solid #777;
+  color: #eee;
+  text-align: left;
+  padding: 0.5rem 1rem; /* Space between text and border */
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  border-radius: 0.5rem; 
+  font-size: 0.9rem;
+  background-color: #212529;
+}
+
+.epBtnVidPage {
+  margin-left: 3vw;
+  margin-top: 1vw;
+  height: auto;
+  width: 90%;
+  background-color: none; /* Light gray background */
+  border: 1px solid #777;
+  color: #eee;
+  text-align: left;
+  padding: 0.5rem 1rem; /* Space between text and border */
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  border-radius: 0.5rem; 
+  font-size: 0.7rem;
+  background-color: #212529;
+}
+
+.epHistoryBtn {
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 1vh;
+  display: block;
+  height: auto;
+  width: 80vw;
+  background-color: none; /* Light gray background */
+  border: 1px solid #777;
+  color: #eee;
+  padding: 0.5rem 1rem; /* Space between text and border */
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 0.5rem; 
+  font-size: 0.9rem;
+  background-color: #212529;
+}
+
+.historyBtn {
+  display: inline-block;
+  margin: 0.5vw;
+  height: auto;
+  width: auto;
+  background-color: none; /* Light gray background */
+  border: 1px solid #777;
+  color: #eee;
+  text-align: left;
+  padding: 0.5rem 1rem; /* Space between text and border */
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  border-radius: 0.5rem; 
+  font-size: 0.9rem;
+  background-color: #212529;
+}
+
+.bottom-right-text {
+    position: fixed;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    bottom: 0rem;
+    right: 0.5rem;
+    z-index: 1000;
+}
+
+#pills-history, #historyCon, #buttonCon {
+  width: 100vw;
+  height: auto;
+}
+
+#historyCon {
+  padding-bottom: 2vh;
+}
+
+a {
+  width: fit-content;
+}
+
+#buttonCon {
+  display: flex;
+  justify-content: center;
+}
+
+.epBtn:hover, .epHistoryBtn:hover, .historyBtn:hover, .epBtnVidPage:hover {
+  background-color: #333; /* Darker background on hover */
+  color: #eee;
+  transform: scale(1.02);
+}
+
+#conWatchContainer, #newestContainer, #showListPage {
+  padding-right: 4vw;
+}
+
+#pills-music {
+  padding: 2vw;
+}

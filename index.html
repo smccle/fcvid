@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" id="favicon" href="./favicon.ico">
+    <title>FCMP (v2.5p)</title>
+    <script src="./covers/data/block1.js"></script>
+    <script src="./covers/data/block2.js"></script>
+    <script src="./covers/data/block3.js"></script>
+    <script src="./covers/data/block4.js"></script>
+    <script src="./covers/data/block5.js"></script>
+    <script src="./covers/data/block6.js"></script>
+    <script src="./covers/data/block7.js"></script>
+    <script src="./covers/data/block8.js"></script>
+    <script src="./covers/data/block9.js"></script>
+    <script src="./covers/data/block10.js"></script>
+    <script src="./covers/imageBase64.js"></script>
+    <link rel="stylesheet" href="./src/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="./src/styles/bootstrap-icons.min.css">
+    <script src="./src/scripts/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="./src/styles/main.css">
+  </head>
+
+  <body>
+    <div id="homePage">
+      <ul style="position: fixed; z-index: 999; width: 100vw; height: auto; background-color: #141414;" class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-home-tab" onclick="window.scrollTo(0,0)" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Home</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-shows-tab" data-bs-toggle="pill" onclick="window.scrollTo(0,0)" data-bs-target="#pills-shows" type="button" role="tab" aria-controls="pills-shows" aria-selected="false">Shows</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-history-tab" data-bs-toggle="pill" onclick="window.scrollTo(0,0)" data-bs-target="#pills-history" type="button" role="tab" aria-controls="pills-history" aria-selected="false">History</button>
+        </li>
+      </ul>
+      <br><br><br>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+          <div id="conWatch">
+            <p style="margin-left: 1vw;">Continue Watching: </p>
+            <div id="conWatchContainer" class="row d-flex align-items-stretch">
+              <!-- <div class="card" style="width: 18rem;">
+                    <img id="imageToLoad" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">S1E1 - Example Name</h5>
+                      <p style="opacity: 75%;" class="card-text">Example Show</p>
+                      <button class="btn btn-primary"><svg width="20" height="20" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/></svg> Continue (05:37 left)</button>
+                    </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <br><br>
+          <div id="newest">
+            <p style="margin-left: 1vw;">Recently Updated: </p>
+            <div id="newestContainer" class="row d-flex align-items-stretch">
+
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-shows" role="tabpanel" aria-labelledby="pills-shows-tab" tabindex="0">
+          <div id="showListPage" class="row d-flex align-items-stretch">
+
+          </div>
+        </div>
+        <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab" tabindex="0">
+          <div id="buttonCon">
+            <button id="downloadHistory" class="btn historyBtn">Download History</button>
+            <button id="clearHistory" class="btn historyBtn">Clear History</button>
+            <button id="uploadHistory" class="btn historyBtn">Upload History</button>
+          </div>
+          <br>
+          <div id="historyCon">
+
+          </div>
+        </div>
+      </div>
+      <div id="verCon">
+        <p style="font-size: 0.8rem; text-align: center; opacity: 0.5;">v2.5 | <a style="color: #eee;" href="./devlog.txt" target="_blank">Devlog</a></p>
+      </div>
+    </div>
+
+    <div id="showInfoPage">
+      <div id="container">
+        <button id="closeShowInfoBtn" type="button" class="btn" aria-label="Close">🗙</button>
+        <br>
+        <div class="row toprow">
+          <div style="width: 12.5rem; height: auto; padding: 2vw;" class="col-6">
+            <img id="showInfoImg" src="./test.jpg" style="width: 12.5rem; height: 19rem; border-radius: 1vw; margin-left: 2vw;">
+          </div>
+          <div style="width: 75vw; margin-left: 4vw; height: auto; padding: 2vw; position: relative;" class="col-6">
+            <h1 id="showInfoTitle" style="font-size: 2.25rem;">Example Show Title</h1>
+            <h3 id="showInfoEpData" style="font-size: 1rem; opacity: 50%;">2 seasons 26 episodes</h3>
+            <p id="showInfoSynopsis" style="font-size: 0.9rem; opacity: 40%;">Synopsis</p>
+            <br><br>
+            <button class="btn" id="continueShowInfoBtn"><svg width="20" height="20" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/></svg>Start Watching</button>
+          </div>
+        </div>
+        <br>
+        <div class="row bottomrow">
+          <div id="episodeListCon" class="col">
+            <div data-bs-theme="dark">
+              <select id="seasonSelector" class="form-select border" aria-label="seasonSelect"></select>
+            </div>
+            <div id="episodeList">
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="videoPage">
+      <button id="closeVideoBtn" type="button" class="btn" aria-label="CloseShow">🗙</button>
+      <div id="leftVid">
+          <video id="player" src="" controls></video>
+          <p id="showTitleVidPage">...</p>
+          <h3 id="epTitleVidPage">...</h3>
+      </div>
+      <div id="rightVid">
+          <div data-bs-theme="dark">
+            <select class="form-select border" id="vidSeasonSelector"></select>
+          </div>
+          <div id="vidEpisodeList">
+
+          </div>
+      </div>
+    </div>
+  </body>
+  <script src="./src/scripts/idb-keyval.js"></script>
+  <script src="./src/scripts/serviceWorker.js"></script>
+  <script src="./src/scripts/data.js"></script>
+  <script src="./src/scripts/main.js"></script>
+</html>
