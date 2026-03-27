@@ -543,13 +543,15 @@ async function openShowInfo(dataToPass) {
         continueShowBtn.innerHTML = `${svg} S${mostRecent[0]} E${mostRecent[1]} - ${showData[`S${mostRecent[0]}`]["epNames"][mostRecent[1]-1]} (${showHistoryData[`S${mostRecent[0]}`][`EP${mostRecent[1]}`]["timeLeft"]})`;
         seasonSelector.value = mostRecent[0];
         seasonChange();
+        continueShowBtn.onclick = function() {
+            playEpisode(data["identifier"], [mostRecent[0], mostRecent[1]-1], dataToPass);
+        }
     } else {
         continueShowBtn.innerHTML = `${svg} Start Watching`;
         seasonChange();
-    }
-
-    continueShowBtn.onclick = function() {
-        playEpisode(data["identifier"], [mostRecent[0], mostRecent[1]-1], dataToPass);
+        continueShowBtn.onclick = function() {
+            playEpisode(data["identifier"], [1,0], dataToPass);
+        }
     }
 
     

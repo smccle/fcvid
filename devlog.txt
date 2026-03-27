@@ -1,3 +1,6 @@
+Bug Fix v2.9 03/27/2026
+    - Fixed issue when using start watch button to play a show for the first time
+
 Update v2.8 03/25/2026
     - Updated a few styles
     - Made database name customizable to help resolve possible conflicts if two sites share the same database name
