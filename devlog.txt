@@ -1,3 +1,15 @@
+Update v2.8 03/25/2026
+    - Updated a few styles
+    - Made database name customizable to help resolve possible conflicts if two sites share the same database name
+    - Added timestamp to historyData_v2 JSON file name for easier identification
+
+Update/Optimization v2.7 03/10/2026
+    - Optimized overall performance
+    - Show title on continue watch cards now link to that show's info
+
+Update v2.6 03/09/2026
+    - Added back and next track button on video page
+
 Update v2.5 03/05/2026
     - Updated videoPage to have more functionality similar to old versions
 

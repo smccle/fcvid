@@ -14,16 +14,20 @@ videoPlayer = document.getElementById("player"),
 showTitleInfoPage = document.getElementById("showTitleVidPage"),
 epTitleInfoPage = document.getElementById("epTitleVidPage"),
 closeVideoBtn = document.getElementById("closeVideoBtn"),
+backVideoBtn = document.getElementById("backVideoBtn"),
+nextVideoBtn = document.getElementById("nextVideoBtn"),
 historyDiv = document.getElementById("historyCon"),
 continueShowBtn = document.getElementById("continueShowInfoBtn"),
 vidSeasonSelector = document.getElementById("vidSeasonSelector"),
 vidEpisodeListDiv = document.getElementById("vidEpisodeList");
 
+const dataName = "historyData-v2";
+
 const finishEpisodeInterval = 90;
 
 const svg = `<svg width="20" height="20" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/></svg>`;
 
-let hideTimeout;
+var timeoutObj = {showHideTimeout: null,  videoHideTimeout: null, backHideTimeout: null, nextHideTimeout: null};
 
 const compareObj = (objA, objB) => {
   let res  = true;
@@ -36,12 +40,12 @@ const compareObj = (objA, objB) => {
 }
 
 
-function showButton(elem) {
+function showButton(elem, timeoutToUse) {
   elem.style.opacity = '1';
-  clearTimeout(hideTimeout);
-  hideTimeout = setTimeout(() => {
-    elem.style.opacity = '0';
-  }, 2000); // hide after 2 seconds of no interaction
+  clearTimeout(timeoutObj[timeoutToUse]);
+  timeoutObj[timeoutToUse] = setTimeout(() => {
+    elem.style.opacity = '0.2';
+  }, 2750); // hide after 3 seconds of no interaction
 }
 
 var interval = {
@@ -102,12 +106,18 @@ function createContinueWatchCard(data) {
 
     const newShowNameText = document.createElement("p");
     newShowNameText.className = "card-text";
-    newShowNameText.style.opacity = "75%";
+    newShowNameText.style.opacity = "50%";
+    newShowNameText.style.textDecoration = "underline";
+    newShowNameText.style.cursor = "pointer";
+    newShowNameText.onclick = function() {
+        openShowInfo(data);
+    }
     newShowNameText.textContent = data["showTitle"];
 
 
     const newShowButton = document.createElement("button");
     newShowButton.style.marginTop = "auto";
+    newShowButton.style.borderRadius = "0.75rem"
     newShowButton.className = "btn btn-primary";
     if (data["timeLeft"] !== "Start" && data["timeLeft"] !== 'Watch Again') {
         newShowButton.innerHTML = `<svg width="15" height="15" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/></svg> Continue (${data["timeLeft"]})`;
@@ -155,7 +165,6 @@ function createContinueWatchCard(data) {
 async function playEpisode(identifier, epToPlay, itsData) {
     vidSeasonSelector.innerHTML = "";
     vidEpisodeListDiv.innerHTML = "";
-    vidSeasonSelector.removeEventListener("change", seasonChangeVid);
     let passData = itsData;
     window.scrollTo(0, 0);
     homePageDiv.style.display = "none";
@@ -174,7 +183,7 @@ async function playEpisode(identifier, epToPlay, itsData) {
     epTitleInfoPage.innerHTML = `S${season}E${episode+1} - ${episodeTitle}`;
     videoPlayer.src = episodeSrc;
 
-    var historyDataObject = await get('historyData-v2');
+    var historyDataObject = await get(dataName);
 
     videoPlayer.onloadedmetadata = function() {
         if ((historyDataObject["historyData"][identifier][`S${season}`][`EP${episode+1}`]["currentTime"]+finishEpisodeInterval) <= videoPlayer.duration) {
@@ -191,7 +200,7 @@ async function playEpisode(identifier, epToPlay, itsData) {
         "currentEpisode": episode+1
     }
 
-    var historyDataObj = await get("historyData-v2");
+    var historyDataObj = await get(dataName);
     var toAdd = true
     historyDataObj["history"].forEach((obj) =>  {
         if (compareObj(newHistoryOption, obj)) {
@@ -232,11 +241,11 @@ async function playEpisode(identifier, epToPlay, itsData) {
 
     historyDataObj["historyData"][identifier]["mostRecent"] = [season, episode+1];
 
-    await set("historyData-v2", historyDataObj);
+    await set(dataName, historyDataObj);
 
 
     async function updateHistory() {
-        var historyDataObj = await get('historyData-v2');
+        var historyDataObj = await get(dataName);
         var showHistoryData = historyDataObj["historyData"][identifier];
         showHistoryData[`S${season}`][`EP${episode+1}`]["currentTime"] = videoPlayer.currentTime;
         if ((videoPlayer.duration !== NaN && videoPlayer.currentTime !== NaN) && (videoPlayer.duration !== null && videoPlayer.currentTime !== null) && (videoPlayer.duration !== undefined && videoPlayer.currentTime !== undefined)) {
@@ -299,7 +308,7 @@ async function playEpisode(identifier, epToPlay, itsData) {
                 }
                 showHistoryData[`S${season}`][`EP${episode+1}`]["timeLeft"] = "Watch Again";
             }
-            await set('historyData-v2', historyDataObj);
+            await set(dataName, historyDataObj);
         }
     }
 
@@ -345,25 +354,37 @@ async function playEpisode(identifier, epToPlay, itsData) {
     interval.make(checkVideoTime, 1000);
 
     function nextEp() {
-        vidSeasonSelector.removeEventListener("change", seasonChangeVid);
         playEpisode(identifier, upNext, passData);
     }
 
     function previousEp () {
-        vidSeasonSelector.removeEventListener("change", seasonChangeVid);
         playEpisode(identifier, previous, passData);
     }
 
     if (!dontUpNext) {
         navigator.mediaSession.setActionHandler("nexttrack", nextEp);
+        nextVideoBtn.onclick = nextEp;
+        nextVideoBtn.style.display = "block";
     } else {
         navigator.mediaSession.setActionHandler("nexttrack", null);
+        nextVideoBtn.onclick = null;
+        nextVideoBtn.style.display = "none";
     }
 
     if (!dontPrevious) {
         navigator.mediaSession.setActionHandler("previoustrack", previousEp);
+        backVideoBtn.onclick = previousEp;
+        backVideoBtn.style.display = "block";
     } else {
         navigator.mediaSession.setActionHandler("previoustrack", null);
+        backVideoBtn.onclick = null;
+        backVideoBtn.style.display = "none";
+    }
+
+    if (dontPrevious) {
+        nextVideoBtn.style.left = "4rem";
+    } else {
+        nextVideoBtn.style.left = "7rem";
     }
 
     function checkVideoTime() {
@@ -402,15 +423,14 @@ async function playEpisode(identifier, epToPlay, itsData) {
     async function seasonChangeVid() {
         vidEpisodeListDiv.innerHTML = "";
         var seasonDataSelected = showData[`S${vidSeasonSelector.value}`];
+        var historyDatav2 = await get(dataName);
+        var historyData = historyDatav2["historyData"];
+        var showHistoryData = historyData[identifier];
         for (let i = 0; i < seasonDataSelected["EpCount"]; i++) {
-            var historyDatav2 = await get("historyData-v2");
-            var historyData = historyDatav2["historyData"];
-            var showHistoryData = historyData[identifier];
             let newEp = document.createElement("button");
             newEp.className = "epBtnVidPage";
             newEp.innerHTML = `${i+1}.&ensp;${seasonDataSelected["epNames"][i]} <span style="opacity: 0.75;">(${showHistoryData[`S${vidSeasonSelector.value}`][`EP${i+1}`]["timeLeft"]})</span>`;
             newEp.onclick = function() {
-                vidSeasonSelector.removeEventListener("change", seasonChangeVid);
                 playEpisode(identifier, [vidSeasonSelector.value, i], passData);
             }
             
@@ -421,11 +441,7 @@ async function playEpisode(identifier, epToPlay, itsData) {
 
     seasonChangeVid();
 
-    vidSeasonSelector.addEventListener("change", seasonChangeVid);
-
-    closeVideoBtn.addEventListener('click', function() {
-        vidSeasonSelector.removeEventListener("change", seasonChangeVid);
-    })
+    vidSeasonSelector.onchange = seasonChangeVid;
 
     videoPlayer.addEventListener("play", () => {
         interval.clearAll();
@@ -468,10 +484,10 @@ async function openShowInfo(dataToPass) {
         epList.innerHTML = " ";
         showInfoImg.src = showData[`S${seasonSelector.value}`]["cover"];
         var seasonDataSelected = showData[`S${seasonSelector.value}`];
+        var historyDatav2 = await get(dataName);
+        var historyData = historyDatav2["historyData"];
+        var showHistoryData = historyData[data["identifier"]];
         for (let i = 0; i < seasonDataSelected["EpCount"]; i++) {
-            var historyDatav2 = await get("historyData-v2");
-            var historyData = historyDatav2["historyData"];
-            var showHistoryData = historyData[data["identifier"]];
             let newEp = document.createElement("button");
             newEp.className = "epBtn";
             newEp.innerHTML = `${i+1}.&ensp;${seasonDataSelected["epNames"][i]} <span style="opacity: 0.75;">(${showHistoryData[`S${seasonSelector.value}`][`EP${i+1}`]["timeLeft"]})</span>`;
@@ -483,10 +499,9 @@ async function openShowInfo(dataToPass) {
             epList.appendChild(newEp);
         }
     }
-    seasonSelector.addEventListener("change", seasonChange);
+    seasonSelector.onchange = seasonChange;
 
     closeBtn.onclick = function() {
-        seasonSelector.removeEventListener("change", seasonChange);
         window.scrollTo(0, 0);
         loadHistoryData().then((data) => {
             pushHistoryData(data);
@@ -497,7 +512,6 @@ async function openShowInfo(dataToPass) {
     }
 
     closeVideoBtn.onclick = function() {
-        seasonSelector.removeEventListener("change", seasonChange);
         interval.clearAll();
         window.scrollTo(0, 0);
         videoPlayer.src = "";
@@ -511,7 +525,6 @@ async function openShowInfo(dataToPass) {
     }
 
     showTitleInfoPage.onclick = function() {
-        seasonSelector.removeEventListener("change", seasonChange);
         interval.clearAll();
         window.scrollTo(0, 0);
         videoPlayer.src = "";
@@ -521,7 +534,7 @@ async function openShowInfo(dataToPass) {
         })
     }
 
-    var historyDatav2 = await get("historyData-v2");
+    var historyDatav2 = await get(dataName);
     var historyData = historyDatav2["historyData"];
     var showHistoryData = historyData[data["identifier"]];
     var mostRecent = showHistoryData["mostRecent"];
@@ -601,7 +614,7 @@ function createShowCard(data, parentElem) {
 
 async function loadHistoryData() {
     const inCaseOfOldData = await get("historyData");
-    const newData = await get("historyData-v2");
+    const newData = await get(dataName);
     if (inCaseOfOldData !== null && inCaseOfOldData !== undefined && (newData == undefined || newData == null)) {
         var newHistoryData = {};
 
@@ -633,7 +646,7 @@ async function loadHistoryData() {
             "history": []
         }
 
-        await set("historyData-v2", newHistoryDataToSet);
+        await set(dataName, newHistoryDataToSet);
         return newHistoryDataToSet;
     } else if (newData !== null && newData !== undefined) {
         var newHistoryData = newData["historyData"];
@@ -657,7 +670,7 @@ async function loadHistoryData() {
                 }
             }
         })
-        await set('historyData-v2', newData);
+        await set(dataName, newData);
         return newData;
     } else {
         var newHistoryData = {};
@@ -681,7 +694,7 @@ async function loadHistoryData() {
             "history": []
         }
 
-        await set("historyData-v2", newHistoryDataToSet);
+        await set(dataName, newHistoryDataToSet);
         return newHistoryDataToSet;
     }
 }
@@ -783,30 +796,74 @@ loadHistoryData().then((data) => {
 
 loadShows();
 videoPlayer.addEventListener('mousemove', function() {
-    showButton(closeVideoBtn);
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
 });
 videoPlayer.addEventListener('focus', function() {
-    showButton(closeVideoBtn);
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
+});
+closeVideoBtn.addEventListener('mousemove', function() {
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
+});
+closeVideoBtn.addEventListener('focus', function() {
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
+});
+nextVideoBtn.addEventListener('mousemove', function() {
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
+});
+nextVideoBtn.addEventListener('focus', function() {
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
+});
+backVideoBtn.addEventListener('mousemove', function() {
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
+});
+backVideoBtn.addEventListener('focus', function() {
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
 });
 videoPlayer.addEventListener('play', function() {
-    showButton(closeVideoBtn);
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
 });
 videoPlayer.addEventListener('pause', function() {
-    showButton(closeVideoBtn);
+    showButton(closeVideoBtn, "videoHideTimeout");
+    showButton(nextVideoBtn, "nextHideTimeout");
+    showButton(backVideoBtn, "backHideTimeout");
 });
 
 showInfoDiv.addEventListener("mousemove", function() {
-    showButton(closeBtn);
+    showButton(closeBtn, "showHideTimeout");
 });
 showInfoDiv.addEventListener("focus", function() {
-    showButton(closeBtn);
+    showButton(closeBtn, "showHideTimeout");
+})
+closeBtn.addEventListener("mousemove", function() {
+    showButton(closeBtn, "showHideTimeout");
+});
+closeBtn.addEventListener("focus", function() {
+    showButton(closeBtn, "showHideTimeout");
 })
 showInfoDiv.addEventListener("click", function() {
-    showButton(closeBtn);
+    showButton(closeBtn, "showHideTimeout");
 })
 
 async function downloadHistory() {
-    var historyData = await get("historyData-v2");
+    var historyData = await get(dataName);
     var jsonData = JSON.stringify(historyData, null, 2);
     var newBlob = new Blob([jsonData], {type: "application/json"});
 
@@ -814,7 +871,7 @@ async function downloadHistory() {
 
     var newA = document.createElement("a");
     newA.href = newUrl;
-    newA.download = "historyData_v2.json";
+    newA.download = `historyData_v2(${new Date().toLocaleDateString("en-CA")}_${new Date().toLocaleTimeString("en-GB", {hour12: false}).replace(/:/g, '-')}).json`;
     newA.style.display = "none";
     document.body.appendChild(newA);
     newA.click();
@@ -917,7 +974,7 @@ async function uploadHistory() {
                                 'conWatchData': conWatchData,
                                 'history': history
                             }
-                            await set('historyData-v2', newObj);
+                            await set(dataName, newObj);
                             alert('History data uploaded successfully.');
                             window.location.reload();
                         } else {
@@ -938,7 +995,7 @@ async function uploadHistory() {
 }
 
 async function clearData() {
-    await set("historyData-v2", null);
+    await set(dataName, null);
     alert('data cleared');
     window.location.reload();
 }

@@ -94,7 +94,7 @@
    bottom:2%;
   cursor: pointer;
   /* Key style for pill shape */
-  border-radius: 50px; 
+  border-radius: 0.75rem; 
   font-size: 0.6rem;
 }
 
@@ -166,6 +166,7 @@ body {
   width: 69vw;
   height: 100vh;
   float: left;
+  background-color: #141414;
 }
 
 #leftVid > p, #leftVid > h3 {
@@ -181,7 +182,7 @@ body {
 }
 
 
-#closeVideoBtn, #closeShowInfoBtn {
+#closeVideoBtn, #closeShowInfoBtn, #backVideoBtn, #nextVideoBtn {
   transition: 0.1s ;
   position: absolute;
   margin-top: 1rem;
@@ -190,7 +191,6 @@ body {
   border-radius: 3rem; 
   font-size: 0.9rem;
   background-color: #212529;
-  opacity: 0;
   background-color: none; /* Light gray background */
   border: 1px solid #777;
   color: #eee;
@@ -201,6 +201,18 @@ body {
   transition: 0.25s ease-in-out;
 }
 
+#nextVideoBtn, #backVideoBtn {
+  display: none;
+}
+
+#nextVideoBtn {
+  left: 7rem;
+}
+ 
+#backVideoBtn {
+  left: 4rem;
+}
+
 #closeShowInfoBtn {
   right: 1rem;
 }
@@ -209,7 +221,7 @@ body {
   left: 1rem;
 }
 
-#closeVideoBtn:hover, #closeShowInfoBtn:hover {
+#closeVideoBtn:hover, #closeShowInfoBtn:hover, #backVideoBtn:hover, #nextVideoBtn:hover {
   background-color: #333; /* Darker background on hover */
   color: #eee;
 }
@@ -234,7 +246,7 @@ body {
   margin: 8px 4px;
   cursor: pointer;
   /* Key style for pill shape */
-  border-radius: 50px; 
+  border-radius: 0.75rem; 
   font-size: 0.9rem;
   bottom: 1.5rem;
 }
