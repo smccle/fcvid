@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" id="favicon" href="./favicon.ico">
-    <title>FCMP (v2.9p)</title>
+    <title>FCMP (v3.1.0)</title>
+    <script src="./src/scripts/pro-player.js"></script>
     <script src="./covers/data/block1.js"></script>
     <script src="./covers/data/block2.js"></script>
     <script src="./covers/data/block3.js"></script>
@@ -14,6 +16,9 @@
     <script src="./covers/data/block9.js"></script>
     <script src="./covers/data/block10.js"></script>
     <script src="./covers/data/block11.js"></script>
+    <script src="./covers/data/block12.js"></script>
+    <script src="./covers/data/block13.js"></script>
+    <script src="./covers/data/block14.js"></script>
     <script src="./covers/imageBase64.js"></script>
     <link rel="stylesheet" href="./src/styles/bootstrap.min.css">
     <link rel="stylesheet" href="./src/styles/bootstrap-icons.min.css">
@@ -60,6 +65,22 @@
           </div>
         </div>
         <div class="tab-pane fade" id="pills-shows" role="tabpanel" aria-labelledby="pills-shows-tab" tabindex="0">
+          <div id="toprowbtns">
+            <select id="catSelector"></select>
+            <span>Sort By: </span><select id="sortBy">
+              <option value="1">Newest Updated</option>
+              <option value="2">Oldest Updated</option>
+              <option value="3">A-Z</option>
+            </select>
+          </div>
+          <br>
+          <div id="searchDiv">
+            <form id="searchForm">
+              <input id="searchText" type="text" placeholder="Search">
+              <button type="submit" id="searchSubmit"><svg width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+            </form>
+          </div>
+          <br>
           <div id="showListPage" class="row d-flex align-items-stretch">
 
           </div>
@@ -71,13 +92,20 @@
             <button id="uploadHistory" class="btn historyBtn">Upload History</button>
           </div>
           <br>
+          <div id="hsearchDiv">
+            <form id="hsearchForm">
+              <input id="hsearchText" type="text" placeholder="Search">
+              <button type="submit" id="hsearchSubmit"><svg width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+            </form>
+          </div>
+          <br>
           <div id="historyCon">
 
           </div>
         </div>
       </div>
       <div id="verCon">
-        <p style="font-size: 0.8rem; text-align: center; opacity: 0.5;">v2.9p | <a style="color: #eee;" href="./devlog.txt" target="_blank">Devlog</a></p>
+        <p style="font-size: 0.8rem; text-align: center; opacity: 0.5;">v3.1.0 | <a style="color: #eee;" href="./devlog.txt" target="_blank">Devlog</a></p>
       </div>
     </div>
 
@@ -87,7 +115,7 @@
         <br>
         <div class="row toprow">
           <div style="width: 12.5rem; height: auto; padding: 2vw;" class="col-6">
-            <img id="showInfoImg" src="./test.jpg" style="width: 12.5rem; height: 19rem; border-radius: 1vw; margin-left: 2vw;">
+            <img id="showInfoImg" style="width: 12.5rem; height: 19rem; border-radius: 1vw; margin-left: 2vw;">
           </div>
           <div style="width: 75vw; margin-left: 4vw; height: auto; padding: 2vw; position: relative;" class="col-6">
             <h1 id="showInfoTitle" style="font-size: 2.25rem;">Example Show Title</h1>
@@ -113,22 +141,10 @@
     </div>
 
     <div id="videoPage">
-      <button id="closeVideoBtn" type="button" class="btn" aria-label="CloseShow">🗙</button>
-      <button id="backVideoBtn" type="button" class="btn" aria-label="backShow">⏴</button>
-      <button id="nextVideoBtn" type="button" class="btn" aria-label="nextShow">⏵</button>
-      <div id="leftVid">
-          <video id="player" src="" controls></video>
-          <p id="showTitleVidPage">...</p>
-          <h3 id="epTitleVidPage">...</h3>
-      </div>
-      <div id="rightVid">
-          <div data-bs-theme="dark">
-            <select class="form-select border" id="vidSeasonSelector"></select>
-          </div>
-          <div id="vidEpisodeList">
-
-          </div>
-      </div>
+          <!-- <button id="closeVideoBtn" type="button" class="btn" aria-label="CloseShow">🗙</button> -->
+          <div style="width: 100%; height: 100%;" id="player"></div>
+          <p id="showTitleVidPage" style="display: none;">...</p>
+          <h3 id="epTitleVidPage" style="display: none;">...</h3>
     </div>
   </body>
   <script src="./src/scripts/idb-keyval.js"></script>

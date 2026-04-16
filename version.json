@@ -1,6 +1,6 @@
 {
-    "version": 29,
-    "filesToAdd": [],
-    "filesToRemove": [],
-    "filesToUpdate": ["/index.html", "/devlog.txt", "/src/scripts/main.js"]
+    "version": 34,
+    "filesToAdd": ["/src/scripts/pro-player.js"],
+    "filesToRemove": ["/src/scripts/playerjs.js"],
+    "filesToUpdate": ["/index.html", "/devlog.txt", "/src/scripts/main.js", "/src/styles/main.css"]
 }

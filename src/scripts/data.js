@@ -47,4 +47,13 @@ const showsToExportNew = {
     "ES2": ES2
 }
 
+const categories = {
+    "All": {
+        "updateOrder": [
+            ES2,
+            ES
+        ]
+    }
+}
+
 const recentlyUpdated = [ES2];

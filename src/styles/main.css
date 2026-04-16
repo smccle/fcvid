@@ -117,7 +117,10 @@ body {
 }
 
 #showInfoPage, #videoPage {
+  width: 100vw;
+  height: 100vh;
     display: none;
+    /* overflow: auto; */
     overflow-x:hidden;
 }
 
@@ -141,11 +144,6 @@ body {
 
 .row {
   padding: 1rem;
-}
-
-#player {
-  width: 100%;
-  height: 75%;
 }
 
 #info {
@@ -218,7 +216,7 @@ body {
 }
 
 #closeVideoBtn {
-  left: 1rem;
+  right: 1rem;
 }
 
 #closeVideoBtn:hover, #closeShowInfoBtn:hover, #backVideoBtn:hover, #nextVideoBtn:hover {
@@ -234,6 +232,25 @@ body {
   height: 100vh;
   padding-right: 2vw;
   float: right;
+}
+
+#toprowbtns, #searchDiv, #hsearchDiv {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+#searchSubmit, #hsearchSubmit {
+  margin-left: 0.5vw;
+}
+
+#searchText, #searchSubmit, #hsearchText, #hsearchSubmit {
+  background-color: #212529;
+  color: #eee;
+  border-radius: 0.5rem;
+  border: 1px solid #999;
+  padding: 0.4rem;
 }
 
 #continueShowInfoBtn {
@@ -255,7 +272,7 @@ body {
   transform: scale(1.05);
 }
 
-#seasonSelector, #vidSeasonSelector {
+#seasonSelector {
   font-size: 1rem;
   margin-left: 3vw;
   width: auto;
@@ -264,7 +281,25 @@ body {
 }
 
 #vidSeasonSelector {
+  margin-left: 3vw;
+  background-color: #212529;
+  width: 90%;
   font-size: 0.9rem;
+}
+
+#catSelector, #sortBy {
+  background-color: #212529;
+  color: #eee;
+  border-radius: 0.5rem;
+  padding: 0.4rem;
+}
+
+#catSelector, #sortBy {
+  margin-right: 1vw;
+}
+
+#sortBy {
+  margin-left: 0.5vw;
 }
 
 .epBtn {
@@ -289,7 +324,7 @@ body {
   margin-left: 3vw;
   margin-top: 1vw;
   height: auto;
-  width: 90%;
+  width: 85%;
   background-color: none; /* Light gray background */
   border: 1px solid #777;
   color: #eee;

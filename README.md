@@ -8,11 +8,12 @@ A Media player that can be used to easily organize your favorite video media and
 * Separate into seasons for easier access
 * Episode names
 * Easy access to specific episodes
+* Sort shows into categories
 * recentlyUpdated  section to put most recent additions front and center
 ### Video Playback
-* Standard built-in browser player
+* PlayerJS advanced video player
 * mediaSession API Compatability for easy control of content
-* Up next to move onto next episode
+* Episode selector on video page for easy bingibility
 ### Data
 * Continue watching to get right back where you left off
 * History page to go back to a specific episodes you were watching
@@ -51,6 +52,12 @@ A Media player that can be used to easily organize your favorite video media and
 			// Add all shows in this object
 		}
 
+		const categories = {
+			"${categoryName}": {
+				"updateOrder": [{updateOrderArray}]
+			}
+		}
+
 		const recentlyUpdated = [{showObjectArray}];
 		
 		
@@ -70,6 +77,10 @@ A Media player that can be used to easily organize your favorite video media and
 	* **showObject**: the reference to the object for your show
 	* **recentlyUpdated**: put all shows you want to be pushed to the recently updated section here
 	* **showObjectArray**: put the object references in this array for the shows you want to push to recentlyUpdated 
+	* **categories**: a way to sort your shows into seperate categories
+		> NOTE: recommended to make an "All" category so not every show is filtered, making at least one category is required to display
+	* **categoryName**: The name of your specific category
+	* **updateOrderArray**: Put all of the shows that fit into the category in order of newest show first (used for sorting)
 
 * ### Change when episodes mark as complete
 	

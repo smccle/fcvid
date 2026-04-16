@@ -1,4 +1,4 @@
-const cacheName = "vidPlayer-v2.5p";
+const cacheName = "vidPlayer-v3.1.0";
 
 const filesToCache = [
     '/',
@@ -7,11 +7,13 @@ const filesToCache = [
     '/src/scripts/data.js',
     '/src/scripts/idb-keyval.js',
     '/src/styles/main.css',
+    '/src/scripts/pro-player.js',
     '/src/scripts/main.js',
     '/src/scripts/bootstrap.bundle.min.js',
     '/src/styles/bootstrap-icons.min.css',
     '/src/styles/bootstrap.min.css',
     '/favicon.ico',
+    '/version.json',
     '/README.md',
     '/src/scripts/serviceWorker.js',
     '/covers/imageBase64.js',

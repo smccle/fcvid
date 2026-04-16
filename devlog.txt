@@ -1,3 +1,22 @@
+Upgrade v3.1.0 04/15/2026
+    - Overhauled video player
+
+Upgrade v3.0.0 04/06/2026
+    - Added new options to filter shows on showsList
+    - Added search bar for easier finding of shows
+
+    Bug Fix v3.0.1 04/07/2026
+        - Fixed search query filtering
+        - Fixed issue when uploading an older historyData file if new content has been added to data.js since file was downloaded
+    
+    Bug Fix v3.0.2 04/08/2026
+        - Fixed unnoticed issue with upNext when completing the last episode of a show
+    
+    Update v3.0.3 04/09/2026
+        - Added search to history page
+
+// New versioning above
+
 Bug Fix v2.9 03/27/2026
     - Fixed issue when using start watch button to play a show for the first time
 
