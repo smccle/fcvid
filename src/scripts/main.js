@@ -428,13 +428,12 @@ async function playEpisode(identifier, epToPlay, itsData) {
                 if (savedTime > 0 && (savedTime + finishEpisodeInterval) <= duration) {
                     myPlayer.api("seek", savedTime);
                 }
-
-                if ('mediaSession' in navigator) {
-                    updateMediaSession(season, episode);
-                }
                 
                 hasSeekedCurrentTrack = true; 
                 myPlayer.api("play");
+                if ('mediaSession' in navigator) {
+                    updateMediaSession(season, episode);
+                }
                 return; // Do not save history right now! Exit and wait for the seek to finish.
             }
             
