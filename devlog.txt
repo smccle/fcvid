@@ -1,6 +1,9 @@
 Upgrade v3.1.0 04/15/2026
     - Overhauled video player
 
+    Bug Fix v3.1.1 04/16/2026
+        - Fixed multiple fatal issues pertaining to the new player
+
 Upgrade v3.0.0 04/06/2026
     - Added new options to filter shows on showsList
     - Added search bar for easier finding of shows

@@ -1,5 +1,6 @@
 const historyDataToSave = null;
 let myPlayer = null;
+let isVideoLoading = false; // THE NEW LOCK
 const homePageDiv = document.getElementById("homePage"),
 showInfoDiv = document.getElementById("showInfoPage"),
 videoPageDiv = document.getElementById("videoPage"),
@@ -29,11 +30,41 @@ historySeachForm = document.getElementById("hsearchForm"),
 historySearchText = document.getElementById("hsearchText"),
 historySearchSubmit = document.getElementById("hsearchSubmit");
 
-function removeMediaSession() {
+function destroyPlayer() {
+    // 1. Stop any rogue initialization loops
+    if (window.playerInitCheck) clearInterval(window.playerInitCheck);
+    
+    // 2. Pause the official player if it exists
+    if (myPlayer) {
+        try { myPlayer.api("pause"); } catch(e) {}
+    }
+    
+    // 3. THE TRUE AGGRESSIVE SWEEP: Target ALL media elements on the entire page
+    // This catches the native <video> tags PlayerJS is actually creating
+    const allMediaElements = document.querySelectorAll("video, audio, iframe");
+    
+    allMediaElements.forEach(media => {
+        try { if (media.pause) media.pause(); } catch(e) {} // Stop playback
+        
+        media.removeAttribute("src"); // Strip the main source
+        media.innerHTML = ""; // Strip any internal <source> tags
+        
+        try { if (media.load) media.load(); } catch(e) {} // Force browser to dump the audio cache
+        
+        media.remove(); // Physically delete it from the DOM
+    });
+    
+    // 4. Clear the main container
+    const playerDiv = document.getElementById("player");
+    if (playerDiv) playerDiv.innerHTML = ""; 
+    
+    // 5. Wipe OS Media Session
     if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = null;
         navigator.mediaSession.playbackState = "none";
     }
+    
+    myPlayer = null;
 }
 
 PlayerjsEvents = function(event,id,data){
@@ -51,9 +82,7 @@ PlayerjsEvents = function(event,id,data){
 let closeFunction = function() {
     interval.clearAll();
     window.scrollTo(0, 0);
-    document.getElementById("player").innerHTML = ""; 
-    myPlayer = null;
-    removeMediaSession();
+    destroyPlayer();
     loadHistoryData().then((data) => {
         pushHistoryData(data);
     })
@@ -64,7 +93,7 @@ let closeFunction = function() {
 
 const closeTo = 0;
 
-const dataName = "historyData-v2-preview";
+const dataName = "historyData-v2";
 
 const finishEpisodeInterval = 90;
 
@@ -155,6 +184,7 @@ function createContinueWatchCard(data) {
     newShowNameText.style.textDecoration = "underline";
     newShowNameText.style.cursor = "pointer";
     newShowNameText.onclick = function() {
+        this.blur();
         openShowInfo(data);
     }
     newShowNameText.textContent = data["showTitle"];
@@ -170,13 +200,12 @@ function createContinueWatchCard(data) {
         newShowButton.innerHTML = `<svg width="15" height="15" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/></svg> Start Watching`;
     }
     newShowButton.onclick = function() {
+        this.blur();
         document.getElementById("player").removeEventListener("closePlayer", closeFunction);
         closeFunction = function() {
             interval.clearAll();
             window.scrollTo(0, 0);
-            document.getElementById("player").innerHTML = "";
-            myPlayer = null;
-            removeMediaSession();
+            destroyPlayer();
             loadHistoryData().then((data) => {
                 pushHistoryData(data);
             })
@@ -186,10 +215,10 @@ function createContinueWatchCard(data) {
         }
         document.getElementById("player").addEventListener("closePlayer", closeFunction);
         showTitleInfoPage.onclick = function() {
+            this.blur();
             interval.clearAll();
             window.scrollTo(0, 0);
-            document.getElementById("player").innerHTML = ""; 
-            myPlayer = null;
+            destroyPlayer();
             openShowInfo(data);
             loadHistoryData().then((data) => {
                 pushHistoryData(data);
@@ -213,6 +242,20 @@ function createContinueWatchCard(data) {
 }
 
 async function playEpisode(identifier, epToPlay, itsData) {
+    // 1. If the lock is active, ignore the click completely and exit!
+    if (isVideoLoading) {
+        console.log("Ignored overlapping click: Player is currently loading.");
+        return; 
+    }
+    
+    // 2. Lock the doors so no other clicks can get in
+    isVideoLoading = true;
+
+    destroyPlayer();
+    if (document.activeElement) {
+        document.activeElement.blur(); 
+    }
+
     let passData = itsData;
     window.scrollTo(0, 0);
     homePageDiv.style.display = "none";
@@ -232,8 +275,7 @@ async function playEpisode(identifier, epToPlay, itsData) {
 
     // --- 1. Safely Render UI First ---
 
-    // --- 2. Build PlayerJS Folder Playlist & Calculate Flat Index ---
-// --- 2. Build PlayerJS Folder Playlist ---
+    // --- 2. Build PlayerJS Folder Playlist ---
     let playlist = [];
 
     for (let s = 1; s <= showData["seasonCount"]; s++) {
@@ -241,11 +283,13 @@ async function playEpisode(identifier, epToPlay, itsData) {
         let seasonFolder = [];
         
         for (let e = 0; e < sData["EpCount"]; e++) {
-            seasonFolder.push({
+            let epObj = {
                 title: `E${e+1} - ${sData["epNames"][e]}`, 
                 file: sData["files"][e],
-                id: `S${s}E${e}` // This is all PlayerJS needs now
-            });
+                id: `S${s}E${e}`
+            };
+
+            seasonFolder.push(epObj);
         }
         
         playlist.push({
@@ -260,9 +304,12 @@ async function playEpisode(identifier, epToPlay, itsData) {
 
     // THE FIX: Break PlayerJS's internal aspect-ratio wrapper
 
+    let targetId = `S${season}E${episode}`;
+
     myPlayer = new Playerjs({
         id: "player",
         file: playlist,
+        plstart: targetId,
         autonext: 1,
         width: "100%",
         height: "100%"
@@ -285,24 +332,33 @@ async function playEpisode(identifier, epToPlay, itsData) {
             navigator.mediaSession.setActionHandler("previoustrack", function() { myPlayer.api("prev"); });
         }
     }
-
-// --- 5. Start Playback & Setup State Variables ---
+    // --- 5. Start Playback & Setup State Variables ---
     let hasSeekedCurrentTrack = false;
-    let targetId = `S${season}E${episode}`;
+
+    // Failsafe: Unlock the app if the player takes longer than 10 seconds to load
+    setTimeout(() => {
+        if (isVideoLoading) {
+            console.log("Player load timed out. Unlocking.");
+            isVideoLoading = false;
+        }
+    }, 10000);
 
     // Create a temporary, rapid loop to check when the player API is actually alive
-    let playerInitCheck = setInterval(() => {
+    window.playerInitCheck = setInterval(() => {
         try {
             let checkReady = myPlayer.api("id");
             
             if (checkReady !== undefined && checkReady !== null) {
-                clearInterval(playerInitCheck); 
+                clearInterval(window.playerInitCheck); 
                 
-                // 1. THE FIX: PlayerJS explicitly requires the "id:" prefix for playlist jumps!
-                myPlayer.api("play", `id:${targetId}`); 
-                myPlayer.api("pause");
+                isVideoLoading = false; 
                 
-                // 2. Start your main database history loop
+                // NEW: Find the PlayerJS iframe and force the browser to focus on it
+                const playerIframe = document.querySelector('#player iframe');
+                if (playerIframe) {
+                    playerIframe.focus();
+                }
+                
                 interval.clearAll();
                 interval.make(updateHistory, 2000); 
             }
@@ -456,8 +512,7 @@ async function openShowInfo(dataToPass) {
     videoPageDiv.style.display = "none";
 
     // --- PlayerJS Cleanup (Replaces old videoPlayer.pause() logic) ---
-    document.getElementById("player").innerHTML = ""; 
-    myPlayer = null;
+    destroyPlayer();
     // -----------------------------------------------------------------
     let showData = showsToExportNew[data["identifier"]];
     let seasonCount = showData["seasonCount"];
@@ -494,6 +549,7 @@ async function openShowInfo(dataToPass) {
             newEp.className = "epBtn";
             newEp.innerHTML = `${i+1}.&ensp;${seasonDataSelected["epNames"][i]} <span style="opacity: 0.75;">(${showHistoryData[`S${seasonSelector.value}`][`EP${i+1}`]["timeLeft"]})</span>`;
             newEp.onclick = function() {
+                this.blur();
                 playEpisode(data["identifier"], [seasonSelector.value, i], dataToPass);
             }
             epList.appendChild(newEp);
@@ -502,6 +558,7 @@ async function openShowInfo(dataToPass) {
     seasonSelector.onchange = seasonChange;
 
     closeBtn.onclick = function() {
+        this.blur();
         window.scrollTo(0, 0);
         loadHistoryData().then((data) => {
             pushHistoryData(data);
@@ -514,9 +571,7 @@ async function openShowInfo(dataToPass) {
     closeFunction = function() {
         interval.clearAll();
         window.scrollTo(0, 0);
-        document.getElementById("player").innerHTML = ""; 
-        myPlayer = null;
-        removeMediaSession();
+        destroyPlayer();
         openShowInfo(data);
         loadHistoryData().then((data) => {
             pushHistoryData(data);
@@ -527,12 +582,12 @@ async function openShowInfo(dataToPass) {
     }
     document.getElementById("player").addEventListener("closePlayer", closeFunction);
     showTitleInfoPage.onclick = function() {
+        this.blur();
         interval.clearAll();
         window.scrollTo(0, 0);
         
         // Ensure video background audio stops playing
-        document.getElementById("player").innerHTML = ""; 
-        myPlayer = null;
+        destroyPlayer();
         
         openShowInfo(data);
         loadHistoryData().then((data) => {
@@ -551,12 +606,14 @@ async function openShowInfo(dataToPass) {
         seasonSelector.value = mostRecent[0];
         seasonChange();
         continueShowBtn.onclick = function() {
+            this.blur();
             playEpisode(data["identifier"], [mostRecent[0], mostRecent[1]-1], dataToPass);
         }
     } else {
         continueShowBtn.innerHTML = `${svg} Start Watching`;
         seasonChange();
         continueShowBtn.onclick = function() {
+            this.blur();
             playEpisode(data["identifier"], [1,0], dataToPass);
         }
     }
@@ -606,6 +663,7 @@ function createShowCard(data, parentElem) {
     }
 
     newCard.onclick = function() {
+        this.blur();
         openShowInfo(data);
     }
 
@@ -743,13 +801,12 @@ function pushHistoryData(data) {
                 identifier: item["showIdentifier"]
             }
             newHistoryElem.onclick = function() {
+                this.blur();
                 document.getElementById("player").removeEventListener("closePlayer", closeFunction);
                 closeFunction = function() {
                     interval.clearAll();
                     window.scrollTo(0, 0);
-                    document.getElementById("player").innerHTML = ""; 
-                    myPlayer = null;
-                    removeMediaSession();
+                    destroyPlayer();
                     loadHistoryData().then((data) => {
                         pushHistoryData(data);
                     })
@@ -759,10 +816,10 @@ function pushHistoryData(data) {
                 }
                 document.getElementById("player").addEventListener("closePlayer", closeFunction);
                 showTitleInfoPage.onclick = function() {
+                    this.blur();
                     interval.clearAll();
                     window.scrollTo(0, 0);
-                    document.getElementById("player").innerHTML = ""; 
-                    myPlayer = null;
+                    destroyPlayer();
                     loadHistoryData().then((data) => {
                         pushHistoryData(data);
                     })
@@ -1132,6 +1189,7 @@ async function clearData() {
 }
 
 document.getElementById("clearHistory").onclick = function() {
+    this.blur();
     var confirmed = window.confirm("Are you sure you want to clear all history data?");
     if (confirmed) {
         clearData();
@@ -1139,6 +1197,7 @@ document.getElementById("clearHistory").onclick = function() {
 }
 
 document.getElementById("downloadHistory").onclick = function() {
+    this.blur();
     var confirmed = window.confirm("Do you want to download your history data?");
     if (confirmed) {
         downloadHistory();
@@ -1146,6 +1205,7 @@ document.getElementById("downloadHistory").onclick = function() {
 }
 
 document.getElementById("uploadHistory").onclick = function() {
+    this.blur();
     var confirmed = window.confirm("Do you want to upload a historyData JSON file?");
     if (confirmed) {
         uploadHistory();
