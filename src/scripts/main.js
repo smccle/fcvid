@@ -64,7 +64,7 @@ let closeFunction = function() {
 
 const closeTo = 0;
 
-const dataName = "historyData-v2";
+const dataName = "historyData-v2-preview";
 
 const finishEpisodeInterval = 90;
 
