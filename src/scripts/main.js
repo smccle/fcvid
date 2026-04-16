@@ -64,7 +64,7 @@ let closeFunction = function() {
 
 const closeTo = 0;
 
-const dataName = "historyData-v2-previewpage";
+const dataName = "historyData-v2";
 
 const finishEpisodeInterval = 90;
 
@@ -378,12 +378,12 @@ async function playEpisode(identifier, epToPlay, itsData) {
                 }
                 
                 hasSeekedCurrentTrack = true; 
+                myPlayer.api("play");
                 return; // Do not save history right now! Exit and wait for the seek to finish.
             }
             
             // NEW: Complete hard stop. Prevents history updating with 0 before the video is fully loaded.
             if (!hasSeekedCurrentTrack) return;
-            myPlayer.api("play");
             
             if (currentTime !== undefined && currentTime !== null && !isNaN(currentTime)) {
                 showHistoryData[`S${season}`][`EP${episode+1}`]["currentTime"] = currentTime;
