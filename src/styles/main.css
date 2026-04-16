@@ -13,6 +13,10 @@
   font-size: 14px;
 }
 
+#homePage {
+  overflow-x: hidden;
+}
+
 .nav-pills .nav-link:hover {
   background-color: #555; /* Darker background on hover */
   color: #eee;
