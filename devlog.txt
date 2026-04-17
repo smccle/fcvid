@@ -3,6 +3,9 @@ Upgrade v3.1.0 04/15/2026
 
     Bug Fix v3.1.1 04/16/2026
         - Fixed multiple fatal issues pertaining to the new player
+    
+    Update v3.1.2 04/16/2026
+        - Updated player buttons and config
 
 Upgrade v3.0.0 04/06/2026
     - Added new options to filter shows on showsList
